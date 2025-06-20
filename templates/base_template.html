@@ -1,0 +1,345 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>InstaSave - Download Instagram Stories, Reels & Posts</title>
+    <meta
+      name="description"
+      content="Free Instagram downloader for stories, reels, and posts. Save Instagram content easily with our simple, fast and free tool."
+    />
+    <meta
+      name="keywords"
+      content="instagram downloader, instagram story downloader, instagram reels downloader, instagram post downloader, download instagram videos, download instagram photos"
+    />
+<!-- Google AdSense -->
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX" crossorigin="anonymous"></script>
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="/favicon.png" />
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <script src="https://unpkg.com/htmx.org@1.9.12"></script>
+    {% comment %} Google reCAPTCHA {% endcomment %}
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+    <!-- Custom Tailwind Configuration -->
+    <script>
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              primary: {
+                50: "#f0f9ff",
+                100: "#e0f2fe",
+                200: "#bae6fd",
+                300: "#7dd3fc",
+                400: "#38bdf8",
+                500: "#0ea5e9",
+                600: "#0284c7",
+                700: "#0369a1",
+                800: "#075985",
+                900: "#0c4a6e",
+              },
+              instagram: {
+                pink: "#E4405F",
+                purple: "#833AB4",
+                orange: "#F56040",
+                yellow: "#FCCC63",
+              },
+            },
+          },
+        },
+      };
+    </script>
+
+    <!-- Schema.org markup for Google -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "InstaSave - Instagram Downloader",
+        "description": "Free tool to download Instagram reels, and posts",
+        "applicationCategory": "UtilityApplication",
+        "operatingSystem": "Any",
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "USD"
+        },
+        "featureList": [
+          "Download facebook videos",
+          "Download Instagram Reels",
+          "Download Instagram Posts",
+          "Free to use",
+          "No registration required"
+        ]
+      }
+    </script>
+  </head>
+  <body
+    class="bg-gray-50 text-gray-900 dark:bg-gray-900 dark:text-gray-100 transition-colors duration-300"
+  >
+    <!-- Navbar -->
+   <nav class="bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex justify-between h-16">
+      
+      <!-- Left: Logo -->
+      <div class="flex items-center">
+        <a href="{% url 'home' %}" class="flex-shrink-0 flex items-center">
+          <div class="bg-gradient-to-r from-instagram-pink to-instagram-purple p-2 rounded-lg mr-2">
+            <img src="{% static 'img/logo.svg' %}" alt="Logo">
+
+          </div>
+          <span class="text-gray-900 dark:text-white font-bold text-xl">InstaSave</span>
+        </a>
+      </div>
+
+      <!-- Right: Links & Theme Toggle -->
+      <div class="flex items-center space-x-6 text-sm font-medium">
+        <a href="{% url 'blog_list' %}" class="text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-white transition-colors duration-200">
+          Blog
+        </a>
+        <a href="{% url 'contact' %}" class="text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-white transition-colors duration-200">
+          Contact Us
+        </a>
+
+        <!-- Theme Toggle Button -->
+        <button
+          id="theme-toggle"
+          class="p-2 rounded-md text-gray-500 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400 focus:outline-none transition-colors duration-200"
+        >
+          <!-- Sun icon for dark mode -->
+          <svg id="sun-icon" class="hidden dark:block h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+          </svg>
+          <!-- Moon icon for light mode -->
+          <svg id="moon-icon" class="block dark:hidden h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+          </svg>
+        </button>
+      </div>
+      
+    </div>
+  </div>
+</nav>
+
+
+    {% block hero %}{% endblock hero %}
+    {% block content %}{% endblock content %}
+    <!-- Footer -->
+    <footer
+      class="bg-white dark:bg-gray-800 py-12 border-t border-gray-200 dark:border-gray-700"
+    >
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid md:grid-cols-4 gap-8">
+          <div class="md:col-span-2">
+            <div class="flex items-center mb-4">
+              <div
+                class="bg-gradient-to-r from-instagram-pink to-instagram-purple p-2 rounded-lg mr-3"
+              >
+                <img src="{% static 'img/logo.svg' %}" alt="Logo">
+              </div>
+              <span class="text-gray-900 dark:text-white font-bold text-xl"
+                >InstaSave</span
+              >
+            </div>
+            <p class="text-gray-600 dark:text-gray-300 mb-4">
+              The easiest way to download Instagram reels, and posts. Free,
+              fast, and secure.
+            </p>
+          </div>
+
+          <div>
+            <h3
+              class="text-sm font-semibold text-gray-900 dark:text-white uppercase tracking-wider mb-4"
+            >
+              Features
+            </h3>
+            <ul class="space-y-2">
+              <li>
+                <a
+                  href="#"
+                  class="text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white transition-colors duration-200"
+                  >Download Instagram Reels</a
+                >
+              </li>
+              <li>
+                <a
+                  href="#"
+                  class="text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white transition-colors duration-200"
+                  >Download Instagram Posts</a
+                >
+              </li>
+              <li>
+                <a
+                  href="#"
+                  class="text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white transition-colors duration-200"
+                  >Download Facebook Videos</a
+                >
+              </li>
+              <li>
+                <a
+                  href="#"
+                  class="text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white transition-colors duration-200"
+                  >High Quality</a
+                >
+              </li>
+            </ul>
+          </div>
+
+          <div>
+            <h3
+              class="text-sm font-semibold text-gray-900 dark:text-white uppercase tracking-wider mb-4"
+            >
+              Legal
+            </h3>
+          <ul class="space-y-2">
+    <li><button onclick="showPrivacyPolicy()" class="text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors duration-200">Privacy Policy</button></li>
+    <li><button onclick="showTermsOfService()" class="text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors duration-200">Terms of Service</button></li>
+    <li><button onclick="showDMCA()" class="text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors duration-200">DMCA</button></li>
+    <li><a href="{% url 'contact' %}" role="button"  class="text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors duration-200">Contact Us</a></li>
+</ul>
+
+          </div>
+        </div>
+
+        <div class="mt-8 pt-8 border-t border-gray-200 dark:border-gray-700">
+          <p class="text-center text-sm text-gray-500 dark:text-gray-400">
+            &copy; 2025 InstaSave. All rights reserved. This tool is not
+            affiliated with Instagram.
+          </p>
+        </div>
+      </div>
+    </footer>
+
+
+
+{% if messages %}
+<script>
+Swal.fire({
+  title: 'Success!',
+  text: '{% for message in messages %}{% if forloop.first %}{{ message }}{% endif %}{% endfor %}',
+  icon: 'success',
+  confirmButtonText: 'OK',
+  customClass: {
+    popup: 'dark:bg-gray-800 dark:text-white'
+  }
+});
+</script>
+{% endif %}
+
+
+    <script>
+      // Theme Toggle with SweetAlert2 customization
+      const themeToggle = document.getElementById("theme-toggle");
+      const html = document.documentElement;
+
+      // Check for saved theme preference or use system preference
+      if (
+        localStorage.theme === "dark" ||
+        (!("theme" in localStorage) &&
+          window.matchMedia("(prefers-color-scheme: dark)").matches)
+      ) {
+        html.classList.add("dark");
+      } else {
+        html.classList.remove("dark");
+      }
+
+      // Toggle theme
+      themeToggle.addEventListener("click", () => {
+        html.classList.toggle("dark");
+
+        // Save preference
+        if (html.classList.contains("dark")) {
+          localStorage.theme = "dark";
+        } else {
+          localStorage.theme = "light";
+        }
+      });
+
+      // SweetAlert2 theme configuration
+      function getSweetAlertTheme() {
+        return html.classList.contains("dark")
+          ? {
+              background: "#1f2937",
+              color: "#f9fafb",
+              confirmButtonColor: "#0ea5e9",
+              cancelButtonColor: "#6b7280",
+            }
+          : {
+              background: "#ffffff",
+              color: "#111827",
+              confirmButtonColor: "#0ea5e9",
+              cancelButtonColor: "#6b7280",
+            };
+      }
+    </script>
+  <script>
+function showPrivacyPolicy() {
+    Swal.fire({
+        title: 'Privacy Policy',
+        html: `<div class="text-left max-h-[60vh] overflow-y-auto text-sm text-gray-700 dark:text-gray-300">
+            <p>We respect your privacy. This policy outlines how we collect, use, and safeguard your data when you use our services.</p>
+            <p class="mt-4"><strong>What we collect:</strong> Usage logs, download history, and technical diagnostics. We do not store personal data unless you contact us.</p>
+            <p class="mt-4"><strong>Cookies:</strong> We use cookies for functional and analytical purposes only.</p>
+            <p class="mt-4"><strong>Third Parties:</strong> We do not sell or share data with third parties except as required by law.</p>
+        </div>`,
+        confirmButtonText: 'Close',
+        background: document.documentElement.classList.contains('dark') ? '#1F2937' : '#fff',
+        color: document.documentElement.classList.contains('dark') ? '#F3F4F6' : '#111827',
+    });
+}
+
+function showTermsOfService() {
+    Swal.fire({
+        title: 'Terms of Service',
+        html: `<div class="text-left max-h-[60vh] overflow-y-auto text-sm text-gray-700 dark:text-gray-300">
+            <p>By using this service, you agree not to misuse it or infringe on copyrights of others.</p>
+            <p class="mt-4">You are solely responsible for content you download or share. We do not endorse unauthorized redistribution.</p>
+            <p class="mt-4">We reserve the right to block users or terminate access at any time without notice for policy violations.</p>
+        </div>`,
+        confirmButtonText: 'I Agree',
+        background: document.documentElement.classList.contains('dark') ? '#1F2937' : '#fff',
+        color: document.documentElement.classList.contains('dark') ? '#F3F4F6' : '#111827',
+    });
+}
+
+function showDMCA() {
+    Swal.fire({
+        title: 'DMCA Policy',
+        html: `<div class="text-left max-h-[60vh] overflow-y-auto text-sm text-gray-700 dark:text-gray-300">
+            <p>We comply with the Digital Millennium Copyright Act. If you believe your rights have been violated, please contact us.</p>
+            <p class="mt-4"><strong>To file a complaint, include:</strong></p>
+            <ul class="list-disc ml-6">
+                <li>Identification of the copyrighted work</li>
+                <li>Proof of ownership</li>
+                <li>Your contact details</li>
+                <li>A signed statement</li>
+            </ul>
+        </div>`,
+        confirmButtonText: 'Understood',
+        background: document.documentElement.classList.contains('dark') ? '#1F2937' : '#fff',
+        color: document.documentElement.classList.contains('dark') ? '#F3F4F6' : '#111827',
+    });
+}
+
+
+</script>
+<script>
+
+
+</script>
+
+    {% block script %}{% endblock script %}
+  </body>
+</html>

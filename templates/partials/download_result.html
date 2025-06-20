@@ -1,0 +1,74 @@
+{% if error %}
+<div class="bg-red-100 text-red-700 p-4 rounded-lg border border-red-300">
+  ❌ {{ error }}
+</div>
+
+{% elif status == "success" %}
+<div class="bg-green-50 dark:bg-gray-700 p-4 rounded-lg border border-green-200 dark:border-gray-600">
+  <div class="flex items-center flex-row justify-between">
+    <p class="font-semibold text-green-800 dark:text-green-200 mb-2">
+      ✅ Download Ready!
+    </p>
+    {% if media and media|length > 1 %}
+    <form id="downloadAllForm" method="POST" action="{% url 'download_all_zip' %}">
+      {% csrf_token %}
+      {% for m in media %}
+      <input type="hidden" name="urls[]" value="{{ m.url }}">
+      {% endfor %}
+      <button type="submit" class="mb-4 px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition flex-row flex items-center justify-center gap-2">
+         Download All Media <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-file-zip-fill" viewBox="0 0 16 16">
+  <path d="M8.5 9.438V8.5h-1v.938a1 1 0 0 1-.03.243l-.4 1.598.93.62.93-.62-.4-1.598a1 1 0 0 1-.03-.243"/>
+  <path d="M4 0h8a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2m2.5 8.5v.938l-.4 1.599a1 1 0 0 0 .416 1.074l.93.62a1 1 0 0 0 1.109 0l.93-.62a1 1 0 0 0 .415-1.074l-.4-1.599V8.5a1 1 0 0 0-1-1h-1a1 1 0 0 0-1 1m1-5.5h-1v1h1v1h-1v1h1v1H9V6H8V5h1V4H8V3h1V2H8V1H6.5v1h1z"/>
+</svg>
+      </button>
+    </form>
+    {% endif %}
+  </div>
+
+  {% if type == "reel" or type == "igtv" or type == "facebook_video" %}
+  <div class="mt-4 ">
+    {% for m in media %} {% if m.type == "video" %}
+    <div class="flex flex-col items-center gap-2">
+
+      <video controls class="w-full rounded-lg mb-4">
+        <source src="{{ m.url }}" type="video/mp4" />
+        Your browser does not support the video tag.
+      </video>
+      <a href="{% url 'proxy_download' %}?url={{ m.url|urlencode }}" download
+        class="text-sm  block mt-1 bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition w-full text-center">
+        Download Video
+      </a>
+    </div>
+    {% endif %} {% endfor %}
+  </div>
+
+  {% elif type == "instagram" %}
+  {% if media|length == 1 %}
+  <div class="flex flex-col items-center justify-center  gap-4 mt-4">
+    {% else %}
+    <div class="grid grid-cols-2 items-center justify-center  gap-4 mt-4">
+      {% endif %}
+      {% for m in media %} {% if m.type == "image" %}
+      <div class="flex flex-col items-center gap-2">
+        <img src="{% url 'proxy_image' %}?url={{ m.url|urlencode }}" width="100%" alt="Post Image"
+          class="rounded-lg shadow mt-2" />
+
+        <a href="{% url 'proxy_download' %}?url={{ m.url|urlencode }}" download
+          class="text-sm  block mt-1 bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition w-full text-center">Download</a>
+      </div>
+      {% elif m.type == "video" %}
+      <div class="flex flex-col items-center gap-2">
+        <video controls class="w-full rounded-lg mt-4">
+          <source src="{{ m.url }}" type="video/mp4" />
+        </video>
+        <a href="{% url 'proxy_download' %}?url={{ m.url|urlencode }}" download
+          class="text-sm  block mt-1 bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition w-full text-center">Download</a>
+      </div>
+      {% endif %} {% endfor %}
+    </div>
+    {% endif %}
+  </div>
+
+  {% else %}
+  <div class="text-gray-500 dark:text-gray-400">Awaiting input...</div>
+  {% endif %}

@@ -1,0 +1,23 @@
+{% extends 'base_template.html' %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto py-10 px-4">
+    <h1 class="text-4xl font-extrabold text-gray-900 dark:text-white mb-4 leading-tight">
+        {{ post.title }}
+    </h1>
+    <p class="text-sm text-gray-500 dark:text-gray-400 mb-6">
+        Published on {{ post.created_at|date:"F j, Y" }}
+    </p>
+
+    {% if post.image %}
+    <img src="{{ post.image.url }}" alt="Blog Image" class="rounded-lg shadow-md w-full mb-6 object-cover">
+    {% endif %}
+
+    <div class="prose prose-lg dark:prose-invert max-w-none mb-10">
+        {{ post.content|safe }}
+    </div>
+
+    <!-- 👇 Include ad after content -->
+    {% include "ads/ad_block_1.html" %}
+</div>
+{% endblock %}
