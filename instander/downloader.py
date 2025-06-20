@@ -3,8 +3,14 @@ import os
 import json
 import subprocess
 import instaloader
+from .insta_login import get_available_instaloader
+import os
+from django.conf import settings
 
-L = instaloader.Instaloader()
+file_path = os.path.join(settings.BASE_DIR, "login_accounts.json")
+
+L = get_available_instaloader(file_path)
+
 
 # --- URL Validation ---
 def is_instagram_url(url):
