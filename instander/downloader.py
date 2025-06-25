@@ -94,6 +94,7 @@ def fetch_instagram_media(url: str) -> List[Dict]:
     session_manager = get_session_manager()
     
     username, L = get_instagram_session_with_tracking()
+    assert L.context.username is not None, "Instaloader not logged in!"
     for attempt in range(MAX_RETRIES):
         try:
             logger.info(f"Attempt {attempt + 1}: Using account {username} to fetch {shortcode}")

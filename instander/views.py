@@ -96,14 +96,42 @@ def handle_download(request, expected_type):
                       'error': error_msg,
                       'technical_error': str(e) if request.user.is_staff else None
                   }
-
+        elif is_facebook_url(url):
+          content_type = detect_content_type(url)
+          logger.info(f"Detected facebook content type: {content_type}")
+          # Handle Facebook content
+          try:
+              media = fetch_facebook_video(url)
+              context = {
+                  "status": "success",
+                  "type": "facebook",
+                  "content_type": content_type,
+                  "media": media,
+                  "url": url
+              }
+              logger.info("Successfully fetched Facebook video")
+              logger.info(context)
+          except Exception as e:
+              # Provide user-friendly error messages
+              error_msg = str(e)
+              if "private" in error_msg.lower() or "restricted" in error_msg.lower():
+                  error_msg = "Cannot download private or restricted videos"
+              elif "not available" in error_msg.lower() or "removed" in error_msg.lower():
+                  error_msg = "Video is not available or has been removed"
+              elif "timeout" in error_msg.lower():
+                  error_msg = "Request timeout - video may be too large"
+              
+              context = {
+                  'error': error_msg,
+                  'technical_error': str(e) if request.user.is_staff else None 
+              }
         else:
             # Invalid URL or unsupported platform
             context = {
                 'error': 'Invalid or unsupported URL. Please provide a valid Instagram or Facebook URL',
                 'supported_platforms': ['Instagram Posts', 'Instagram Reels', 'Facebook Videos']
             }
-
+        logger.info(context)
         return render(request, 'partials/download_result.html' if is_htmx else 'download.html', context)
 
     except Exception as e:
@@ -112,6 +140,8 @@ def handle_download(request, expected_type):
             'error': 'An unexpected error occurred. Please try again later.',
             'technical_error': str(e) if request.user.is_staff else None
         }
+
+        
         return render(request, 'partials/download_result.html' if is_htmx else 'download.html', context)
 
 # --- Proxy Functions ---
